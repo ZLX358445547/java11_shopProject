@@ -139,6 +139,7 @@ public class CartServiceImpl implements ICartService {
 
         //step4:判断购物车是否全选
         int count=cartMapper.isCheckedAll(userId);
+        //count>0表示有商品处于未选中状态
         if(count>0){
             cartVO.setIsallchecked(false);
         }else {
@@ -206,9 +207,9 @@ public class CartServiceImpl implements ICartService {
     @Override
     public ServerResponse select(Integer userId, Integer productId,Integer check) {
         //step1:参数非空校验
-        if (productId==null || productId.equals("")){
+      /*  if (productId==null || productId.equals("")){
             return ServerResponse.createServerResponseByError("参数不能为空");
-        }
+        }*/
         //step2:dao接口
         cartMapper.selectOrUnselectProduct(userId,productId,check);
         //step3:返回结果
