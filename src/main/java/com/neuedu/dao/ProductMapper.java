@@ -2,7 +2,15 @@ package com.neuedu.dao;
 
 import com.neuedu.pojo.Product;
 import com.neuedu.pojo.Product;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
+import java.util.Set;
+
+@Mapper
+
 
 public interface ProductMapper {
     /**
@@ -44,4 +52,31 @@ public interface ProductMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Product record);
+
+    //============================================
+
+    /*
+    * 更新商品
+    *
+    * */
+    int updateProductKeySelective(Product product);
+
+
+    /*
+    * 按照商品id或者name 进行查询
+    * */
+    List<Product> findProductByProductIdOrProductName(@Param("productId") Integer productId,
+                                                      @Param("productName") String productName);
+    /**
+     * 前台接口-搜索商品
+     * */
+
+    List<Product> searchProduct(@Param("integerSet") Set<Integer> integerSet,
+                                @Param("keyword") String keyword
+                               );
+
+    /**
+     * 按照商品id查询商品库存
+     * */
+//    Integer findStockByProductId(Integer productId);
 }
