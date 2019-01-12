@@ -14,6 +14,7 @@ import com.neuedu.pojo.Category;
 import com.neuedu.pojo.Product;
 import com.neuedu.service.ICategoryService;
 import com.neuedu.service.IProductService;
+import com.neuedu.utils.FTPUtil;
 import com.neuedu.utils.PropertiesUtils;
 import com.neuedu.vo.ProductDetailVO;
 import com.neuedu.vo.ProductListVo;
@@ -254,6 +255,7 @@ public class ProductServiceImpl implements IProductService {
              file.transferTo(file1);
              //上传到图片服务器
              //。。。。。。
+             FTPUtil.uploadFile(Lists.newArrayList(file1));
              //图片上传成功之后返回的逻辑
              Map<String,String> map = Maps.newHashMap();
              map.put("uri",newFileName);

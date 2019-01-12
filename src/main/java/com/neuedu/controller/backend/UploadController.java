@@ -19,11 +19,11 @@ public class UploadController {
     @Autowired
     IProductService productService;
 
-
-    @RequestMapping(value = "/upload",method = RequestMethod.GET)
+    //用于加载templates里面的动态页面
+  /*  @RequestMapping(value = "/upload",method = RequestMethod.GET)
     public String uploadHtml(){
         return "upload";//逻辑视图  前缀加逻辑视图加后缀 --》
-    }
+    }*/
 
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     @ResponseBody
