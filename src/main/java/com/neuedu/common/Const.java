@@ -3,6 +3,8 @@ package com.neuedu.common;
 public class Const {
     public static final String CURREBTUSER = "current_user";
 
+
+    public static final String TRADE_SUCCESS="TRADE_SUCESS";
     public enum ResponseCodeEnum {
 
         NEED_LOGIN(2, "需要登录"),
@@ -156,7 +158,7 @@ public  enum OrderStatusEnum{
         this.desc = desc;
     }
 
-
+//=====================
     public  static  OrderStatusEnum codeOf(Integer code){
         for(OrderStatusEnum orderStatusEnum: values()){
             if(code==orderStatusEnum.getCode()){
@@ -168,7 +170,7 @@ public  enum OrderStatusEnum{
 
 
 }
-
+//=========================
     public  enum PaymentEnum{
 
         ONLINE(1,"线上支付")
@@ -206,7 +208,7 @@ public  enum OrderStatusEnum{
             this.desc = desc;
         }
     }
-
+//=================================
     public  enum PaymentPlatformEnum{
 
         ALIPAY(1,"支付宝")
