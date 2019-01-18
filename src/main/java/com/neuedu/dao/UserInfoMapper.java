@@ -91,6 +91,15 @@ public interface UserInfoMapper {
     * */
 
     int updateUserBySelectActive(UserInfo userInfo);
+
+    /*
+    *
+    *
+    * */
+    UserInfo getUserInfoByToken(String token);
+
+    int updateTokenByUserId(@Param("id")Integer id,@Param("token")String token);
+
 }
 
 

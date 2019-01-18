@@ -238,6 +238,30 @@
     </dependencies>
 
     <build>
+
+
+     <!--   <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>false</filtering>
+                <targetPath>BOOT-INF/classes/</targetPath>
+                <includes>
+                    <include>com/neuedu/mapper/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>static/*.html</include>
+                </includes>
+            </resource>
+
+        </resources>
+-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -254,7 +278,7 @@
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                     <compilerArguments>
-                        <extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>
+                        <extdirs>${project.basedir}/src/main/resources/lib</extdirs>
                     </compilerArguments>
 
                     <fork>false</fork>
@@ -275,7 +299,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    &lt;!&ndash; Mybatis-Generator 工具配置文件的位置 &ndash;&gt;
+                    Mybatis-Generator 工具配置文件的位置
                     <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
                     <verbose>true</verbose>
                     <overwrite>true</overwrite>

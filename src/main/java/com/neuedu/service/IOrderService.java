@@ -40,7 +40,7 @@ public interface IOrderService {
   /*
   * 支付接口
   * */
-  ServerResponse pay(Integer userId,Long orderNo) throws IOException;
+  ServerResponse pay(Integer userId,Long orderNo,String path) throws IOException;
 
 
   /*

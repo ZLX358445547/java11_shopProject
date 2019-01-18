@@ -1,23 +1,16 @@
 package com.neuedu.service.impl;
 
 import com.google.common.collect.Sets;
-import com.neuedu.common.Const;
 import com.neuedu.common.ServerResponse;
 import com.neuedu.dao.CategoryMapper;
-import com.neuedu.dao.UserInfoMapper;
 import com.neuedu.pojo.Category;
-import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.ICategoryService;
-import com.neuedu.service.IUserService;
-import com.neuedu.utils.MD5Utils;
-import com.neuedu.utils.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Service(value = "iCategoryService")
 public class CategoryServiceImpl implements ICategoryService {

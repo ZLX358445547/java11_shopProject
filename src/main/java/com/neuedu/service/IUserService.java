@@ -58,5 +58,11 @@ public interface IUserService {
     * 根据用户id进行查找用户信息
     * */
     UserInfo  findUserInfoByUserid(Integer userId);
+
+    /*
+    *
+    * */
+    UserInfo getUserInfoByToken (String token);
+
 }
 

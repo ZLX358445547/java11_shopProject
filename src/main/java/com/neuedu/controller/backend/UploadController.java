@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -27,8 +28,8 @@ public class UploadController {
 
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse uploadHtml2(@RequestParam(value = "upload_file",required = false)MultipartFile file){
-        String path ="C:\\ftpfile";
+    public ServerResponse uploadHtml2(@RequestParam(value = "upload_file",required = false)MultipartFile file, HttpServletRequest request){
+        String path =request.getSession().getServletContext().getRealPath("upload");
 
         return productService.upload(file,path);
     }

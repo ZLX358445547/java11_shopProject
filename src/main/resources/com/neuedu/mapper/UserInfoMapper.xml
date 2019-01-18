@@ -111,6 +111,7 @@
     where username=#{username} and question=#{question} and answer=#{answer}
   </select>
 
+
   <!--用户修改密码-->
 <update id="updateUserPassword" parameterType="map">
   UPDATE neuedu_user set password=#{password},update_time=now() where username=#{username}
@@ -133,5 +134,22 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
 
+  </update>
+
+
+
+
+  <select id="getUserInfoByToken" resultType="com.neuedu.pojo.UserInfo">
+    select
+    id, username, password, email, phone, question, answer, role, create_time,
+    update_time, ip
+    from neuedu_user
+    where token = #{token}
+  </select>
+
+  <update id="updateTokenByUserId" parameterType="map" >
+    update neuedu_user
+    set token = #{token}
+    where id = #{id}
   </update>
 </mapper>

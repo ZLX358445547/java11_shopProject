@@ -48,6 +48,9 @@ public class UserServiceImpl implements IUserService {
         }
         //step4返回结果
         //业务需求：设置返回前端的密码为空，
+        // 把token放入数据库中
+        String token = MD5Utils.getMD5Code(username + password);
+        userInfoMapper.updateTokenByUserId(userInfo.getId(),token);
         userInfo.setPassword("");
         //返回登录之后的信息
         return ServerResponse.createServerResponseBySucess(userInfo);
@@ -260,5 +263,11 @@ public class UserServiceImpl implements IUserService {
     public UserInfo findUserInfoByUserid(Integer userId) {
         return  userInfoMapper.selectByPrimaryKey(userId);
 
+    }
+
+    @Override
+    public UserInfo getUserInfoByToken(String token) {
+
+        return userInfoMapper.getUserInfoByToken(token);
     }
 }

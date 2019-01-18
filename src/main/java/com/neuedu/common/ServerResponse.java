@@ -12,7 +12,7 @@ import com.neuedu.pojo.UserInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ServerResponse<T> {
 
-
+    //第一步：
     //状态码，0表示成功；非0表示失败
     private Integer status;
     //当status=0视乎，data对应的接口响应的数据
@@ -21,7 +21,7 @@ public class ServerResponse<T> {
     private String msg;
 
 
-
+    //第二步“
     //生成对应的构造方法,构造方法私有，其他类无法调用
 
     private ServerResponse() {
@@ -85,17 +85,17 @@ public class ServerResponse<T> {
      * {"status":custom}
      * */
      public static ServerResponse createServerResponseByError(Integer status){
-           return new ServerResponse(status);
-      }
-     /*
-       * {"status":1,msg:"aaa"}
-       *
-       * */
-     public static ServerResponse createServerResponseByError(String msg){
-             return new ServerResponse(ResponseCode.ERROR,msg);
+         return new ServerResponse(status);
      }
+    /*
+     * {"status":1,msg:"aaa"}
+     *
+     * */
+    public static ServerResponse createServerResponseByError(String msg){
+        return new ServerResponse(ResponseCode.ERROR,msg);
+    }
 
-     /*
+    /*
        * {"status":custom,msg:"aaa"}
        *
        * */

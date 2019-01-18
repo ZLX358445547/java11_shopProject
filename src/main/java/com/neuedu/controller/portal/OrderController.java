@@ -38,9 +38,7 @@ public class OrderController {
     @RequestMapping(value = "/create.do")
     public ServerResponse createOrder(HttpSession session,Integer shippingId){
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
+
 
         return  orderService.createOrder(userInfo.getId(),shippingId);
     }
@@ -51,9 +49,7 @@ public class OrderController {
     @RequestMapping(value = "/cancel.do")
     public ServerResponse cancel(HttpSession session,Long orderNo){
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
+
 
         return  orderService.cancel(userInfo.getId(),orderNo);
     }
@@ -64,9 +60,6 @@ public class OrderController {
     @RequestMapping(value = "/get_order_cart_product.do")
     public ServerResponse get_order_cart_product(HttpSession session){
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
 
         return  orderService.get_order_cart_product(userInfo.getId());
     }
@@ -80,9 +73,6 @@ public class OrderController {
 
     ){
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
 
         return  orderService.list(userInfo.getId(),pageNum,pageSize);
     }
@@ -93,9 +83,7 @@ public class OrderController {
     public ServerResponse detail(HttpSession session, Long orderNo
     ){
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
+
 
         return  orderService.detail(orderNo);
     }
@@ -105,13 +93,11 @@ public class OrderController {
     * 支付宝支付接口
     * */
     @RequestMapping(value = "/pay.do")
-    public ServerResponse pay(HttpSession session,Long orderNo) throws IOException {
+    public ServerResponse pay(HttpSession session,Long orderNo,HttpServletRequest request) throws IOException {
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
 
-        return orderService.pay(userInfo.getId(),orderNo);
+        String path = request.getSession().getServletContext().getRealPath("upload");
+        return orderService.pay(userInfo.getId(),orderNo,path);
     }
 
 
@@ -160,10 +146,6 @@ public class OrderController {
     @RequestMapping(value = "/query_order_pay_status.do")
     public ServerResponse query_order_pay_status(HttpSession session,Long orderNo)  {
         UserInfo userInfo=(UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if(userInfo==null){
-            return ServerResponse.createServerResponseByError("需要登录");
-        }
-
         return orderService.query_order_pay_status(orderNo);
     }
 

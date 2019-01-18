@@ -26,9 +26,7 @@ public class CartController {
     public ServerResponse add(HttpSession session,Integer productId,Integer count){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.add(userInfo.getId(),productId,count);
     }
     /*
@@ -38,9 +36,7 @@ public class CartController {
     public ServerResponse list(HttpSession session){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.list(userInfo.getId());
     }
 
@@ -52,9 +48,7 @@ public class CartController {
     public ServerResponse update(HttpSession session,Integer productId,Integer count){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.update(userInfo.getId(),productId,count);
     }
     /*
@@ -64,9 +58,7 @@ public class CartController {
     public ServerResponse delete_Product(HttpSession session,String productIds){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.delete_Product(userInfo.getId(),productIds);
     }
 
@@ -77,9 +69,7 @@ public class CartController {
     public ServerResponse select(HttpSession session,Integer productId){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.select(userInfo.getId(),productId
                 ,Const.CartCheckedEnum.PRODUCT_CHECKED.getCode());
     }
@@ -90,9 +80,7 @@ public class CartController {
     public ServerResponse un_select(HttpSession session,Integer productId){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.select(userInfo.getId(),productId
                 ,Const.CartCheckedEnum.PRODUCT_UNCHECKED.getCode());
     }
@@ -103,9 +91,7 @@ public class CartController {
     public ServerResponse select_all(HttpSession session){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.select(userInfo.getId(),null
                 ,Const.CartCheckedEnum.PRODUCT_CHECKED.getCode());
     }
@@ -116,9 +102,7 @@ public class CartController {
     public ServerResponse un_select_all(HttpSession session){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.select(userInfo.getId(),null
                 ,Const.CartCheckedEnum.PRODUCT_UNCHECKED.getCode());
     }
@@ -130,9 +114,7 @@ public class CartController {
     public ServerResponse get_cart_product_count(HttpSession session){
         //判断是否登录，权限问题
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo == null){
-            return ServerResponse.createServerResponseByError("请先进行登录");
-        }
+
         return cartService.get_cart_product_count(userInfo.getId());
     }
 

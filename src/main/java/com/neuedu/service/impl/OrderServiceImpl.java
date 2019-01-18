@@ -1,19 +1,17 @@
 package com.neuedu.service.impl;
 
 import com.alipay.api.AlipayResponse;
-import com.alipay.api.domain.TradeFundBill;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
-import com.alipay.api.response.AlipayTradeQueryResponse;
-import com.alipay.api.response.MonitorHeartbeatSynResponse;
+
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
-import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
+
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
+
 import com.alipay.demo.trade.utils.ZxingUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,16 +22,15 @@ import com.neuedu.common.ServerResponse;
 import com.neuedu.dao.*;
 import com.neuedu.pojo.*;
 import com.neuedu.service.IOrderService;
-import com.neuedu.service.IUserService;
+
 import com.neuedu.utils.*;
 import com.neuedu.vo.CartOrderItemVO;
 import com.neuedu.vo.OrderItemVO;
 import com.neuedu.vo.OrderVO;
 import com.neuedu.vo.ShippingVO;
-import jdk.nashorn.internal.ir.ReturnNode;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -470,7 +467,7 @@ public class OrderServiceImpl implements IOrderService {
     * 生成二维码的逻辑
     * */
     @Override
-    public ServerResponse pay(Integer userId, Long orderNo) throws IOException {
+    public ServerResponse pay(Integer userId, Long orderNo,String path) throws IOException {
         //==================================================
         //Map<String ,String> resultMap = Maps.newHashMap();
         Order order = orderMapper.findOrderByUseridAndOrderNo(userId,orderNo);
@@ -537,7 +534,7 @@ public class OrderServiceImpl implements IOrderService {
                     .setOperatorId(operatorId).setStoreId(storeId).setExtendParams(extendParams)
                     .setTimeoutExpress(timeoutExpress)
                     //http://localhost:8080无法访问主机，需要进行一个内网穿透,也就是回调地址，外网能够访问
-                    .setNotifyUrl("http://uygue4.natappfree.cc/order/alipay_callback.do")//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
+                    .setNotifyUrl("http://39.96.66.122:8080/order/alipay_callback.do")//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
                     .setGoodsDetailList(goodsDetailList);
             /*
             * 进行支付宝的下单功能
@@ -549,9 +546,14 @@ public class OrderServiceImpl implements IOrderService {
 
                     AlipayTradePrecreateResponse response = result.getResponse();
                     dumpResponse(response);
+                    File folder = new File(path);
+                    if (!folder.exists()) {
+                        folder.setWritable(true);
+                        folder.mkdirs();
+                    }
 
                     // 需要修改为运行机器上的路径
-                    String filePath = String.format("C:/ftpfile/qr-%s.png",
+                    String filePath = String.format(path + "/qr-%s.png",
                             response.getOutTradeNo());
                     System.out.println("filePath:" + filePath);
                     //将二维码生成，生成之后写入到文件下面
@@ -601,15 +603,14 @@ public class OrderServiceImpl implements IOrderService {
             System.out.println("zhifubaochognfudiaoyong");
             return ServerResponse.createServerResponseByError("支付宝重复调用");
         }
-        if (trade_status.equals("TRADE_SUCESS")){
-            //支付成功
-            //更改订单的状态，更改支付时间
+        if (trade_status.equals("TRADE_SUCCESS")){
+            // 支付成功
+            // 更改订单的状态，更改支付时间
             order.setStatus(Const.OrderStatusEnum.ORDER_PAYED.getCode());
             order.setPaymentTime(DateUtils.strToDate(payment_time));
             orderMapper.updateByPrimaryKey(order);
         }
-        //保存支付信息
-        //保存支付信息
+        // 保存支付信息
         PayInfo payInfo=new PayInfo();
         payInfo.setOrderNo(orderNo);
         payInfo.setPayPlatform(Const.PaymentPlatformEnum.ALIPAY.getCode());

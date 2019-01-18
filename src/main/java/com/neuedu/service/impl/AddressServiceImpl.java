@@ -7,14 +7,11 @@ import com.google.common.collect.Maps;
 import com.neuedu.common.ServerResponse;
 import com.neuedu.dao.ShippingMapper;
 import com.neuedu.pojo.Shipping;
-import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IAddressService;
-import com.sun.org.apache.regexp.internal.RE;
-import jdk.nashorn.internal.ir.ReturnNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.Session;
 import java.util.List;
 import java.util.Map;
 

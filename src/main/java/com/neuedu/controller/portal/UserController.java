@@ -4,6 +4,7 @@ import com.neuedu.common.Const;
 import com.neuedu.common.ServerResponse;
 import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IUserService;
+import com.neuedu.utils.MD5Utils;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sun.security.util.Password;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
@@ -28,12 +32,21 @@ public class UserController {
     @RequestMapping(value = "/login.do")
    public ServerResponse login(HttpSession session,
                                @RequestParam(value = "username") String username,
-                               @RequestParam(value = "password") String password
+                               @RequestParam(value = "password") String password,
+                               HttpServletResponse response
                                ){
 
         ServerResponse serverResponse =  userService.login(username,password);
         //登录成功
+
        if (serverResponse.isSuccess()){
+           // 设置返回的cookie
+           String value = MD5Utils.getMD5Code(username + password);
+           Cookie cookie = new Cookie("token",value);
+           cookie.setMaxAge(1800 * 1000);
+           cookie.setPath("/");
+           cookie.setHttpOnly(true);
+           response.addCookie(cookie);
            UserInfo  userInfo =  (UserInfo)serverResponse.getData();
 
            session.setAttribute(Const.CURREBTUSER,userInfo);
@@ -99,9 +112,7 @@ public class UserController {
     @RequestMapping(value = "/get_user_info.do")
     public ServerResponse get_user_info(HttpSession session){
        UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-       if (userInfo==null){
-           return ServerResponse.createServerResponseByError("用户未登录");
-       }
+
        userInfo.setPassword("");
         return ServerResponse.createServerResponseBySucess(userInfo);
     }
@@ -113,9 +124,7 @@ public class UserController {
     @RequestMapping(value = "/reset_password.do")
     public ServerResponse reset_password(HttpSession session,String passwordOld,String passwordNew){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo==null){
-            return ServerResponse.createServerResponseByError("用户未登录");
-        }
+
         return userService.reset_password(userInfo.getUsername(),passwordOld,passwordNew);
     }
     /*
@@ -127,9 +136,7 @@ public class UserController {
     @RequestMapping(value = "/update_information.do")
     public ServerResponse update_information(HttpSession session,UserInfo user){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo==null){
-            return  ServerResponse.createServerResponseByError("用户未登录");
-        }
+
         user.setId(userInfo.getId());
         ServerResponse serverResponse =  userService.update_information(user);
         if (serverResponse.isSuccess()){
@@ -148,9 +155,7 @@ public class UserController {
     @RequestMapping(value = "/get_information.do")
     public ServerResponse get_information(HttpSession session){
         UserInfo userInfo = (UserInfo) session.getAttribute(Const.CURREBTUSER);
-        if (userInfo==null){
-            return ServerResponse.createServerResponseByError("用户未登录");
-        }
+
         userInfo.setPassword("");
         return ServerResponse.createServerResponseBySucess(userInfo);
     }
@@ -158,11 +163,12 @@ public class UserController {
     /*
      * 退出登录
      *
-     * */
-    @RequestMapping(value = "/logout.do")
+     * */@RequestMapping(value = "/logout.do")
     public ServerResponse logout(HttpSession session){
       session.removeAttribute(Const.CURREBTUSER);
         return ServerResponse.createServerResponseBySucessMsg("成功退出");
     }
+
+
 
 }
