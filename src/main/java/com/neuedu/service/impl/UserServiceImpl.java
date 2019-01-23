@@ -267,7 +267,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserInfo getUserInfoByToken(String token) {
-
+        //System.out.println(3/0);
         return userInfoMapper.getUserInfoByToken(token);
     }
 }

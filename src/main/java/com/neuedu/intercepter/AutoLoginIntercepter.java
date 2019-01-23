@@ -5,7 +5,6 @@ import com.neuedu.common.Const;
 import com.neuedu.common.ServerResponse;
 import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IUserService;
-import com.neuedu.utils.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,10 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Period;
 
 @Component
 public class AutoLoginIntercepter implements HandlerInterceptor {
@@ -48,7 +45,7 @@ public class AutoLoginIntercepter implements HandlerInterceptor {
             }
         }
         response.reset();
-        response.setContentType("text/json.charact=utf-8");
+        response.setContentType("text/json.character=utf-8");
         response.setCharacterEncoding("utf-8");
         PrintWriter printWriter = response.getWriter();
         ServerResponse serverResponse = ServerResponse.createServerResponseByError(100,"需要登录");

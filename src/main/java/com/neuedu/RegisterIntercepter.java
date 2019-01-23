@@ -32,7 +32,7 @@ public class RegisterIntercepter implements WebMvcConfigurer {
         excludeList.add("/product/**");
 
         //注册拦截器，设置拦截与不拦截的url
-        registry.addInterceptor(autoLoginIntercepter).addPathPatterns("/**").excludePathPatterns(excludeList);
+        //registry.addInterceptor(autoLoginIntercepter).addPathPatterns("/**").excludePathPatterns(excludeList);
 
     }
 }

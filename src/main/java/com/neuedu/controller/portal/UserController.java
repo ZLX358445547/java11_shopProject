@@ -2,21 +2,28 @@ package com.neuedu.controller.portal;
 
 import com.neuedu.common.Const;
 import com.neuedu.common.ServerResponse;
+import com.neuedu.dao.UserInfoMapper;
+import com.neuedu.json.ObjectMapperApi;
 import com.neuedu.pojo.UserInfo;
+import com.neuedu.redis.RedisApi;
+import com.neuedu.redis.RedisProperties;
 import com.neuedu.service.IUserService;
 import com.neuedu.utils.MD5Utils;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import sun.security.util.Password;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -26,6 +33,8 @@ public class UserController {
 
     @Autowired
     IUserService userService;
+    @Autowired
+    RedisProperties redisProperties;
     /*
     * 登录
     * */
@@ -35,22 +44,33 @@ public class UserController {
                                @RequestParam(value = "password") String password,
                                HttpServletResponse response
                                ){
+        //测试redis连接
+        System.out.println(redisProperties.getMaxIdle());
 
         ServerResponse serverResponse =  userService.login(username,password);
         //登录成功
 
        if (serverResponse.isSuccess()){
-           // 设置返回的cookie
-           String value = MD5Utils.getMD5Code(username + password);
-           Cookie cookie = new Cookie("token",value);
-           cookie.setMaxAge(1800 * 1000);
-           cookie.setPath("/");
-           cookie.setHttpOnly(true);
-           response.addCookie(cookie);
+           //得到前台的数据，放入userinfo里面
            UserInfo  userInfo =  (UserInfo)serverResponse.getData();
-
+           //设置userInfo的值
            session.setAttribute(Const.CURREBTUSER,userInfo);
+           //=================
+           // 设置返回的cookie
+           //拼接
+           String token = MD5Utils.getMD5Code(username + password);
+           //设置cookie
+           Cookie cookie = new Cookie(Const.CURREBTUSER,token);
+           //设置cookie的相关属性
+           cookie.setPath("/");
+           cookie.setMaxAge(1800*1000);
+           cookie.setHttpOnly(true);
+           //添加cookie
+           response.addCookie(cookie);
+
+
        }
+
        return serverResponse;
 
    }
@@ -163,12 +183,68 @@ public class UserController {
     /*
      * 退出登录
      *
-     * */@RequestMapping(value = "/logout.do")
+     * */
+    @RequestMapping(value = "/logout.do")
     public ServerResponse logout(HttpSession session){
       session.removeAttribute(Const.CURREBTUSER);
         return ServerResponse.createServerResponseBySucessMsg("成功退出");
     }
+    //==========================测试redis===================================
+    @Autowired
+    private JedisPool jedisPool;
+    @RequestMapping(value = "/redis.do")
+    public String getJedis(){
+        //将连接拿出来
+        Jedis jedis = jedisPool.getResource();
+         String  value = jedis.set("zlx","zhanglixing");
+         //将连接还回去
+        jedis.close();
+        return value;
+    }
+
+
+    //====测试api====
+
+
+    @Autowired
+    private RedisApi redisApi;
+
+    @RequestMapping(value="key/{key}")
+    public  String getkey(@PathVariable("key") String key){
+        String value = redisApi.get(key);
+
+        return  value;
+    }
+
+    //===============================测试ObjectMapperApi类  将对象转换为字符串的api==================================================
+
+   @Autowired
+   ObjectMapperApi objectMapperApi;
+    @Autowired
+    UserInfoMapper userInfoMapper;
+
+    @RequestMapping(value = "/json/{userid}")
+    public ServerResponse<UserInfo> findUserByJson(@PathVariable Integer userid,HttpSession session){
+
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userid);
+        String json = objectMapperApi.obj2str(userInfo);
+        System.out.println("============================="+json);
+        return ServerResponse.createServerResponseBySucess(null,userInfo);
+    }
 
 
 
+    @RequestMapping(value = "/jsonPretty/{userid}")
+    public ServerResponse<UserInfo> findUserByJsonPretty(@PathVariable Integer userid,HttpSession session){
+
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userid);
+        List<UserInfo> userInfoList = new ArrayList<>();
+        userInfoList.add(userInfo);
+        String json = objectMapperApi.obj2strPretty(userInfoList);
+        //难于理解
+        List<UserInfo> userInfoList1= objectMapperApi.str2Obj(json, new TypeReference<List<UserInfo>>() {});
+         UserInfo userInfo1 = objectMapperApi.str2Obj(json,UserInfo.class);
+        System.out.println("============================="+userInfo1);
+        return ServerResponse.createServerResponseBySucess(null,userInfo);
+    }
 }
