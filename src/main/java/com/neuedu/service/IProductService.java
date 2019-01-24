@@ -42,7 +42,6 @@ public interface IProductService {
    * */
     ServerResponse detial_portal(Integer productId);
 
-
    /**
     * 前台商品搜索
     * @param  categoryId
@@ -53,6 +52,7 @@ public interface IProductService {
     * */
 
    ServerResponse  list_portal( Integer categoryId, String keyword, Integer pageNum, Integer pageSize, String orderBy);
+
 
 }
 

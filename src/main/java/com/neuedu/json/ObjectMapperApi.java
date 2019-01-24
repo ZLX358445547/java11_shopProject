@@ -15,82 +15,79 @@ public class ObjectMapperApi {
     ObjectMapper objectMapper;
 
     /*
-    * json对象转换成字符串
-    * */
+     * json对象转换成字符串
+     * */
 
-    public <T> String obj2str(T t){
-        if (t == null){
-            return  null;
+    public <T> String obj2str(T t) {
+        if (t == null) {
+            return null;
         }
 
 
         try {
             //三目表达式：   如果t是string类型  就将t强转为string  然后返回；否则执行writeValueAsString
-            return t instanceof String ? (String)t : objectMapper.writeValueAsString(t);
-        }catch (IOException e){
+            return t instanceof String ? (String) t : objectMapper.writeValueAsString(t);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
+
     /*
-    *
-    * */
-    public <T> String obj2strPretty(T t){
-        if (t == null){
-            return  null;
+     *
+     * */
+    public <T> String obj2strPretty(T t) {
+        if (t == null) {
+            return null;
         }
 
 
         try {
             //三目表达式：   如果t是string类型  就将t强转为string  然后返回；writerWithDefaultPrettyPrinter
-            return t instanceof String ? (String)t : objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(t);
-        }catch (IOException e){
+            return t instanceof String ? (String) t : objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(t);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
 
 
-
     /*
-    * 将字符串转换成Java对象   String --》Object
-    * */
-    public <T> T str2Obj(String str,Class<T> clazz){
+     * 将字符串转换成Java对象   String --》Object
+     * */
+    public <T> T str2Obj(String str, Class<T> clazz) {
 
-        if (StringUtils.isNotEmpty(str)||clazz == null) {
-            return  null;
+        if (StringUtils.isEmpty(str) || clazz == null) {
+            return null;
         }
-            try {
-                return  clazz.equals(String.class)?(T)str:objectMapper.readValue(str,clazz);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        return  null;
+        try {
+            return clazz.equals(String.class) ? (T) str : objectMapper.readValue(str, clazz);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-
+        return null;
+    }
 
 
     /*
-    * 将json数组转成java集合
-    * 重载即可
-    * */
-    public <T> T str2Obj(String str, TypeReference<T> typeReference){
+     * 将json数组转成java集合
+     * 重载即可
+     * */
+    public <T> T str2Obj(String str, TypeReference<T> typeReference) {
 
-        if (StringUtils.isNotEmpty(str)||typeReference == null) {
+        if (StringUtils.isNotEmpty(str) || typeReference == null) {
 
             return null;
         }
 
-            try {
-                return  typeReference.getType().equals(String.class)?(T)str:objectMapper.readValue(str,typeReference);
+        try {
+            return typeReference.getType().equals(String.class) ? (T) str : objectMapper.readValue(str, typeReference);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        return  null;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
 
 
 }

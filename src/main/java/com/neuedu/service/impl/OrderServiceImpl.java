@@ -432,8 +432,40 @@ public class OrderServiceImpl implements IOrderService {
         return ServerResponse.createServerResponseBySucess(orderVO);
     }
 
+    /*
+     *关闭订单
+     * */
+    @Override
+    public void closeOrder(String time) {
+        //1.查询订单创建时间，<time的未付款的订单
+        List<Order> orderList = orderMapper.findOrderByCreateTime(Const.OrderStatusEnum.ORDER_UN_PAY.getCode(),time);
+        if (orderList!=null&&orderList.size()>0){
+            for (Order order  : orderList){
+                List<OrderItem> orderItemList = orderItemMapper.findOrderItemsByOrderno(order.getOrderNo());
+                if (orderItemList!=null&&orderItemList.size()>0){
+                    for (OrderItem orderItem :orderItemList){
+                        Product product=  productMapper.selectByPrimaryKey(orderItem.getProductId());
+                        //
+                        if (product == null){
+                         continue;
+                        }
+                        product.setStock(product.getStock()+orderItem.getQuantity());
+                        productMapper.updateByPrimaryKey(product);
+                    }
 
+                }
 
+                //关闭订单
+                order.setStatus(Const.OrderStatusEnum.ORDER_CANCELED.getCode());
+                order.setCloseTime(new Date());
+                orderMapper.updateByPrimaryKey(order);
+
+            }
+
+        }
+    }
+
+    //============================================================================================
     /*////////////////////////////////////////支付相关////////////////////////////////////////////*/
 
 

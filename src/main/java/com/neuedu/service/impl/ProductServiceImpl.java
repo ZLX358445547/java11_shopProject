@@ -307,7 +307,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ServerResponse list_portal(Integer categoryId, String keyword, Integer pageNum, Integer pageSize, String orderBy) {
         //step1:参数校验， categoryId和keyword不能同时为空
-        if(categoryId==null&&keyword==null||keyword.equals("")){
+        if(categoryId==null&&keyword==null||"".equals(keyword)){
             return ServerResponse.createServerResponseByError("参数错误");
         }
         //step2:categoryId

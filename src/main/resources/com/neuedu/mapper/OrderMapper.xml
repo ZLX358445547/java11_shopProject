@@ -110,7 +110,7 @@
     payment_time, send_time, end_time, close_time, create_time, update_time
     from neuedu_order where  status=#{orderStatus} and
      <![CDATA[
-    create_time<=#{time}
+    create_time <= #{time}
       ]]>
 
   </select>

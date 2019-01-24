@@ -69,6 +69,7 @@ public class RedisCacheAspect {
             String json = redisApi.get(key);
             if (json!=null&&!json.equals("")){
                 System.out.println("======读取到了缓存==========");
+                ServerResponse serverResponse = objectMapperApi.str2Obj(json, ServerResponse.class);
                 return objectMapperApi.str2Obj(json, ServerResponse.class);
             }
 
